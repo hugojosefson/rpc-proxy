@@ -1,5 +1,3 @@
-export type IO<T> = Receiver<T> & Sender<T>;
-
 export type Listener<T> = (a: T) => void;
 
 export type ListenerRemover = () => void;
