@@ -4,15 +4,15 @@
 
 RPC implementation for TypeScript / JavaScript, where these conditions are true:
 
-- All methods on the target type must be async. (!!?)
 - Two processes run in different runtime contexts (JS instances).
 - Two processes can communicate with each other:
   - bi-directionally
   - asynchronously
   - ordered
-  - through messages that are either:
-    - text strings, or
-    - JSON objects.
+  - through messages that each is one string.
+- All accessible methods on the target object, or on any object given to it, are `async` (return a `Promise`).
+- All accessible properties on the target object, or on any object given to it, are `readonly`.
+- All accessible properties on the target object, or on any object given to it, have a `Promise` assigned.
 
 The two processes are free to:
 
@@ -28,31 +28,32 @@ The two processes are free to:
 import { createRpcProxy } from "https://deno.land/x/rpc-proxy/mod.ts";
 
 class Person {
-  name: string;
+  readonly name: Promise<string>;
 
   constructor(name: string) {
-    this.name = name;
+    this.name = Promise.resolve(name);
   }
 
-  greet(greeting: string): string {
+  async greet(greeting: string): Promise<string> {
     return `Why, hello to you too! Thank you for saying "${greeting}" to me :)`;
   }
 }
 
 class MyService {
-  sayHelloTo(whom: Person): string {
-    const theirResponse: string = whom.greet(`Hello, ${whom.name}!`);
-    return `I said hello to ${whom.name}, and they responded:\n\n${theirResponse}`;
+  async sayHelloTo(whom: Person): Promise<string> {
+    const name: string = await whom.name;
+    const theirResponse: string = await whom.greet(`Hello, ${name}!`);
+    return `I said hello to ${name}, and they responded:\n\n${theirResponse}`;
   }
 }
 
 const myService: MyService = createRpcProxy<MyService>({
   typeTemplate: {} as MyService,
-  reader, writer // TODO: simple way to obtain them in a way that shows their versatility. TCP sockets?
+  StringReader:  // TODO: simple way to obtain them in a way that shows their versatility. TCP sockets?
 });
 
 const myFriend: Person = new Person("Ada");
-const outcome: string = myService.sayHelloTo(myFriend);
+const outcome: string = await myService.sayHelloTo(myFriend);
 console.log(outcome);
 ```
 
