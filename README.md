@@ -10,9 +10,12 @@ RPC implementation for TypeScript / JavaScript, where these conditions are true:
   - asynchronously
   - ordered
   - through messages that each is one string.
-- All accessible methods on the target object, or on any object given to it, are `async` (return a `Promise`).
-- All accessible properties on the target object, or on any object given to it, are `readonly`.
-- All accessible properties on the target object, or on any object given to it, have a `Promise` assigned.
+- All accessible methods on the target object, or on any object given to it, are
+  `async` (return a `Promise`).
+- All accessible properties on the target object, or on any object given to it,
+  are `readonly`.
+- All accessible properties on the target object, or on any object given to it,
+  have a `Promise` assigned.
 
 The two processes are free to:
 
@@ -66,4 +69,3 @@ Why, hello to you too! Thank you for saying "Hello, Ada!" to me :)
 ```
 
 ### API
-

@@ -1,5 +1,5 @@
-import {Receiver, Sender} from "./io.ts";
-import {uuid} from "./uuid.ts";
+import { Receiver, Sender } from "./io.ts";
+import { uuid } from "./uuid.ts";
 
 // deno-lint-ignore ban-types
 export type Proxyable = object | Function;
@@ -113,8 +113,12 @@ class RpcProxyHandler<P extends Proxyable> implements ProxyHandler<P> {
       return {
         type: "WrappedValue",
         unwrappedValueType: "proxy",
-        valueStringRepresentation: createRpcProxy(this.#receiver, this.#sender, unwrappedValue)
-      }
+        valueStringRepresentation: createRpcProxy(
+          this.#receiver,
+          this.#sender,
+          unwrappedValue,
+        ),
+      };
     }
 
     throw new Error(`Type ${(typeof unwrappedValue)} not implemented.`);
